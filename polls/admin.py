@@ -9,5 +9,12 @@ class QuestionAdmin(admin.ModelAdmin):
     search_fields = ["question_text"]
 
 
-admin.site.register(Choice)
+class ChoiceAdmin(admin.ModelAdmin):
+    list_display = ["question", "choice_text", "votes"]
+    list_filter = ["question", "choice_text"]
+    ordering = ["question", "votes"]
+    search_fields = ["question", "choice_text"]
+
+
+admin.site.register(Choice, ChoiceAdmin)
 admin.site.register(Question, QuestionAdmin)
