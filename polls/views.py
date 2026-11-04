@@ -35,6 +35,11 @@ class ResultsView(generic.DetailView):
     template_name = "polls/results.html"
 
 
+class FrequencyView(generic.DetailView):
+    model = Question
+    template_name = "polls/frequency.html"
+
+
 @require_http_methods(["POST"])
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
