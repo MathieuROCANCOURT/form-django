@@ -32,7 +32,7 @@ import datetime as dt
 [(choice.question.question_text, choice.question.pub_date, choice.choice_text, choice.votes) for choice in Choice.objects.all() if choice.question.id == 2]
 ```
 
-### Récupérer pour chaque question, tous les choix avec tous les attributs.
+### Récupérer pour chaque question, tous les choix avec toutes les attributs.
 
 ```shell
 for question in Question.objects.all():
