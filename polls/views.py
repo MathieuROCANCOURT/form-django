@@ -1,6 +1,3 @@
-import this
-from builtins import sum
-
 from django.db.models import F, Sum, Max
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
