@@ -8,6 +8,8 @@ urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
     # /polls/all
     path("all/", views.AllPollsView.as_view(), name="all"),
+    # /polls/statistics
+    path("statistics/", views.StatisticsView.as_view(), name="statistics"),
     # ex: /polls/5/
     path("<int:pk>/", views.DetailView.as_view(), name="detail"),
     # ex: /polls/5/results/

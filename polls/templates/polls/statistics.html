@@ -1,0 +1,9 @@
+<h1>Statistiques</h1>
+
+<ul>
+    <li>Nombre total de sondage enregistrés: {{ all_statistics.0 }}.</li>
+    <li>Nombre total de choix possibles: {{ all_statistics.1 }}.</li>
+    <li>Nombre total de votes: {{ all_statistics.2 }}.</li>
+    <li>Moyenne du nombre de votes par sondage: {{ all_statistics.3|floatformat:"2" }}</li>
+    <li>La dernière question enregistrée: {{ all_statistics.4 }}</li>
+</ul>

@@ -1,4 +1,7 @@
-from django.db.models import F
+import this
+from builtins import sum
+
+from django.db.models import F, Sum, Max
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -23,6 +26,19 @@ class AllPollsView(generic.ListView):
 
     def get_queryset(self):
         return Question.objects.order_by("-pub_date")
+
+
+class StatisticsView(generic.ListView):
+    template_name = "polls/statistics.html"
+    context_object_name = "all_statistics"
+
+    def get_queryset(self):
+        nb_questions = Question.objects.count()
+        nb_choices = Choice.objects.count()
+        nb_total_votes = Choice.objects.aggregate(total_votes=Sum("votes")).get("total_votes")
+        last_question = Question.objects.aggregate(recent_question=Max("pub_date")).get("recent_question")
+
+        return nb_questions, nb_choices, nb_total_votes, 0 if nb_questions == 0 else nb_total_votes / nb_questions, last_question
 
 
 class DetailView(generic.DetailView):
