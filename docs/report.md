@@ -90,9 +90,25 @@ En cas de non d'affection dans l'argument aggregate, {valeur du String}__sum.
 
 ## Admin file
 
+### Example Admin model
+
+```pycon
+class QuestionAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {"fields": ["question_text"]}),
+        ("Date information", {"fields": ["pub_date"], "classes": ["collapse"]}),
+    ]
+    inlines = [ChoiceInline]
+    list_display = ["question_text", "pub_date", "was_published_recently"]
+    list_filter = ["question_text"]
+    ordering = ["pub_date"]
+    search_fields = ["question_text"]
+```
+On peut ajouter dans le tableau de la variable liste_display les méthodes du modèle.
+
 ### Different method to display in application
 
-Pour avoir comme un modèle admin "Choice" et de voir tout sa liste. 
+Pour avoir comme un modèle admin "Choice" et de voir toute sa liste. 
 ```pycon
 class Choice(admin.ModelAdmin): ...
 ```
