@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from django.contrib import admin
 from django.db.models import Sum
 
 MAX_LENGTH = 20
@@ -15,6 +16,11 @@ class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
 
+    @admin.display(
+        boolean=True,
+        ordering="pub_date",
+        description="Published recently?",
+    )
     def __repr__(self):
         return "<Question: {}>".format(self.question_text)
 
@@ -22,7 +28,8 @@ class Question(models.Model):
         return "{} {}".format(self.pub_date, text_excerpt(self.question_text, MAX_LENGTH))
 
     def was_published_recently(self):
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
     def age(self):
         return timezone.now() - self.pub_date
