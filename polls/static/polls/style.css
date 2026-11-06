@@ -3,6 +3,10 @@ body {
     background-size: cover;
 }
 
+h1 {
+    color: white;
+}
+
 li a {
     color: white;
 }
