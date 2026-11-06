@@ -10,6 +10,10 @@ urlpatterns = [
     path("all/", views.AllPollsView.as_view(), name="all"),
     # /polls/statistics
     path("statistics/", views.statistics, name="statistics"),
+    # ex: /polls/add
+    path('add/', views.add, name='add'),
+    # ex: /polls/confirm_add
+    path('confirm_add/', views.confirm_add, name='confirm_add'),
     # ex: /polls/5/
     path("<int:pk>/", views.DetailView.as_view(), name="detail"),
     # ex: /polls/5/results/
