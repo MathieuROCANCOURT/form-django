@@ -124,3 +124,9 @@ Voir le modèle comme un tableau les choix dans la question.
 ```pycon
 class ChoiceInline(admin.TabularInline): ...
 ```
+
+---
+### Savoir où sont les fichiers source de Django
+```shell
+python -c "import django; print(django.__path__)"
+```
