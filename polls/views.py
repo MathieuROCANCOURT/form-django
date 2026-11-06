@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django.views import generic
 
+from .utils import minimax
 from .models import Question, Choice
 from .forms import NameForm
 
@@ -26,17 +27,24 @@ class AllPollsView(generic.ListView):
         return Question.objects.order_by("-pub_date")
 
 
-class StatisticsView(generic.ListView):
-    template_name = "polls/statistics.html"
-    context_object_name = "all_statistics"
+@require_http_methods(["GET"])
+def statistics(request):
+    nb_questions = Question.objects.count()
+    nb_choices = Choice.objects.count()
+    nb_total_votes = Choice.objects.aggregate(total_votes=Sum("votes")).get("total_votes")
+    average_by_poll = 0 if nb_questions == 0 else nb_total_votes / nb_questions
+    least_popular_question, most_popular_question = minimax()
+    id_last_question = Question.objects.aggregate(max=Max('id'))['max']
 
-    def get_queryset(self):
-        nb_questions = Question.objects.count()
-        nb_choices = Choice.objects.count()
-        nb_total_votes = Choice.objects.aggregate(total_votes=Sum("votes")).get("total_votes")
-        last_question = Question.objects.aggregate(recent_question=Max("pub_date")).get("recent_question")
-
-        return nb_questions, nb_choices, nb_total_votes, 0 if nb_questions == 0 else nb_total_votes / nb_questions, last_question
+    return render(request, 'polls/statistics.html', {
+        'nb_questions': nb_questions,
+        'nb_choices': nb_choices,
+        'nb_total_votes': nb_total_votes,
+        'average_by_poll': average_by_poll,
+        'most_popular_question': most_popular_question,
+        'least_popular_question': least_popular_question,
+        'last_question': id_last_question,
+    })
 
 
 class DetailView(generic.DetailView):
