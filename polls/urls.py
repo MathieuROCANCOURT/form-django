@@ -5,7 +5,7 @@ from . import views
 app_name = "polls"
 urlpatterns = [
     # ex: /polls/
-    path("", views.IndexView.as_view(), name="index"),
+    path("", views.index, name="index"),
     # /polls/all
     path("all/", views.AllPollsView.as_view(), name="all"),
     # /polls/statistics

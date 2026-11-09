@@ -13,13 +13,11 @@ from .forms import Form
 NB_MAX_CHOICES = 5
 
 
-class IndexView(generic.ListView):
-    template_name = "polls/index.html"
-    context_object_name = "latest_question_list"
-
-    def get_queryset(self):
-        """Return the last five published questions."""
-        return Question.objects.order_by("-pub_date")[:5]
+@require_http_methods(["GET"])
+def index(request):
+    latest_question_list = Question.objects.order_by("-pub_date")[:5]
+    context = {"latest_question_list": latest_question_list}
+    return render(request, "polls/index.html", context)
 
 
 class AllPollsView(generic.ListView):
@@ -102,6 +100,12 @@ class ResultsView(generic.DetailView):
 class FrequencyView(generic.DetailView):
     model = Question
     template_name = "polls/frequency.html"
+
+
+@require_http_methods(["GET"])
+def detail(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, "polls/detail.html", {"question": question})
 
 
 def get_name(request):
