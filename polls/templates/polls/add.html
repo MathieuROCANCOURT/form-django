@@ -1,7 +1,8 @@
-{% load static %}
+{% extends "base.html" %}
 
-<link rel="stylesheet" href="{% static 'polls/style.css' %}">
+{% block title %}Form - Add question{% endblock %}
 
+{% block content %}
 <h1>Add a question</h1>
 {% if error_message %}
 <p><strong style="color: red">{{ error_message }}</strong></p>
@@ -19,3 +20,4 @@
     {% endfor %}
     <input type="submit" value="Add">
 </form>
+{% endblock %}

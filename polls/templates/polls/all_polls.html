@@ -1,7 +1,8 @@
-{% load static %}
+{% extends "base.html" %}
 
-<link rel="stylesheet" href="{% static 'polls/style.css' %}">
+{% block title %}Form - Question list{% endblock %}
 
+{% block content %}
 {% if question_list %}
 <ul>
     {% for question in question_list %}
@@ -11,3 +12,4 @@
 {% else %}
 <p>No polls are available.</p>
 {% endif %}
+{% endblock %}

@@ -1,11 +1,12 @@
-{% load static %}
+{% extends "base.html" %}
 
-<link rel="stylesheet" href="{% static 'polls/style.css' %}">
+{% block title %}Form - All Statistics{% endblock %}
 
+{% block content %}
 <h1>Statistiques</h1>
 
-<ul>
-    <li>Nombre total de sondage enregistrés: {{nb_questions}}.</li>
+<ul style="color: white">
+    <li>Nombre total de sondages enregistrés: {{ nb_questions }}.</li>
     <li>Nombre total de choix possibles: {{ nb_choices }}.</li>
     <li>Nombre total de votes: {{ nb_total_votes }}.</li>
     <li>Moyenne du nombre de votes par sondage: {{ average_by_poll|floatformat:"2" }}</li>
@@ -13,3 +14,4 @@
     <li>La question impopulaire: {{ least_popular_question }}</li>
     <li>La question populaire: {{ most_popular_question }}</li>
 </ul>
+{% endblock %}
