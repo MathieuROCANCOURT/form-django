@@ -4,7 +4,7 @@
 
 <h1>Add a question</h1>
 {% if error_message %}
-<p><strong style="color: white">{{ error_message }}</strong></p>
+<p><strong style="color: red">{{ error_message }}</strong></p>
 {% endif %}
 <form action="{% url 'polls:confirm_add' %}" method="post">
     {% csrf_token %}
