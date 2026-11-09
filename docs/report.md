@@ -69,6 +69,24 @@ q = Question(question_text="Es-tu là ?", pub_date=dt.datetime.now())
 q.save()
 ```
 
+### Création d'utilisateurs
+
+```pycon
+from django.contrib.auth.models import User
+user = User.objects.create_user("john", "lennon@thebeatles.com", "johnpassword")
+user.last_name = "Lennon"
+user.save()
+```
+
+### Modification d'un mot de passe utilisateur
+
+```pycon
+from django.contrib.auth.models import User
+user = User.objects.get(username="john")
+u.set_password("new password")
+user.save()
+```
+
 ---
 
 ## View file
@@ -104,16 +122,19 @@ class QuestionAdmin(admin.ModelAdmin):
     ordering = ["pub_date"]
     search_fields = ["question_text"]
 ```
+
 On peut ajouter dans le tableau de la variable liste_display les méthodes du modèle.
 
 ### Different method to display in application
 
-Pour avoir comme un modèle admin "Choice" et de voir toute sa liste. 
+Pour avoir comme un modèle admin "Choice" et de voir toute sa liste.
+
 ```pycon
 class Choice(admin.ModelAdmin): ...
 ```
 
 Voir le modèle bloc par bloc les choix dans la question avec un ajout de 3 blocs par défaut.
+
 ```pycon
 class ChoiceInline(admin.StackedInline):
     model = Choice
@@ -121,12 +142,197 @@ class ChoiceInline(admin.StackedInline):
 ```
 
 Voir le modèle comme un tableau les choix dans la question.
+
 ```pycon
 class ChoiceInline(admin.TabularInline): ...
 ```
 
 ---
+
 ### Savoir où sont les fichiers source de Django
+
 ```shell
 python -c "import django; print(django.__path__)"
 ```
+
+---
+
+## Gestion des données des utilisateurs
+
+### Création d'un superutilisateur
+
+```shell
+python manage.py createsuperuser --username=joe --email=joe@example.com
+```
+
+Créer ensuite votre mot de passe.
+
+On peut le créer sans argument et qu'il faudra saisir par la suite de cette commande:
+
+```shell
+python manage.py createsuperuser
+```
+
+### Modification d'un mot de passe d'un utilisateur
+
+```shell
+django-admin changepassword <superuser>
+```
+
+### Authentification d'un utilisateur
+
+```python
+from django.contrib.auth import authenticate
+
+user = authenticate(username="john", password="secret")
+if user is not None:
+    # A backend authenticated the credentials
+    ...
+else:
+    # No backend authenticated the credentials
+    ...
+```
+
+### Création de permission
+
+```python
+from myapp.models import BlogPost
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+
+content_type = ContentType.objects.get_for_model(BlogPost)
+permission = Permission.objects.create(
+    codename="can_publish",
+    name="Can Publish Posts",
+    content_type=content_type,
+)
+```
+
+## Requête d'authentification Web
+
+### Vérification d'authentification de l'utilisateur
+
+En synchrone:
+
+```python
+if request.user.is_authenticated:
+    # Do something for authenticated users.
+    ...
+else:
+    # Do something for anonymous users.
+    ...
+```
+
+En asynchrone:
+
+```python
+user = await request.auser()
+if user.is_authenticated:
+    # Do something for authenticated users.
+    ...
+else:
+    # Do something for anonymous users.
+    ...
+```
+
+### Exemple de code en Python pour authentification
+
+```python
+from django.contrib.auth import authenticate, login
+
+
+def my_view(request):
+    username = request.POST["username"]
+    password = request.POST["password"]
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        # Redirect to a success page.
+        ...
+    else:
+        # Return an 'invalid login' error message.
+        ...
+```
+
+### Déconnexion de l'utilisateur
+
+```python
+from django.contrib.auth import logout
+
+
+def logout_view(request):
+    logout(request)
+    # Redirect to a success page.
+```
+
+Possibilité de la faire en asynchrone avec la méthode `alogout(request)`.
+
+### Rediriger vers la page de connexion si pas authentifier
+
+```python
+from django.conf import settings
+from django.shortcuts import redirect
+
+
+@login_required(redirect_field_name="my_redirect_field", login_url="/accounts/login/")
+def my_view(request):
+    if not request.user.is_authenticated:
+        return redirect(f"{settings.LOGIN_URL}?next={request.path}")
+    # ...
+```
+
+### Afficher un message d'erreur pour non authentification
+
+```python
+from django.shortcuts import render
+
+
+@login_required
+def my_view(request):
+    if not request.user.is_authenticated:
+        return render(request, "myapp/login_error.html")
+    # ...
+```
+
+Si aucune page de connexion n'est paramétré, il faudra créer une vue d'authentification.
+
+```python
+from django.contrib.auth import views as auth_views
+
+path("accounts/login/", auth_views.LoginView.as_view()),
+```
+
+### Rendu pour réussite de connexion ou de la création d'un utilisateur
+
+```HTML
+{% if user.is_authenticated %}
+<p>Welcome, {{ user.username }}. Thanks for logging in.</p>
+{% else %}
+<p>Welcome, new user. Please log in.</p>
+{% endif %}
+```
+
+### Vérification de la permission dans le gabarit
+
+```HTML
+{% if perms.foo %}
+<p>You have permission to do something in the foo app.</p>
+{% if perms.foo.add_vote %}
+<p>You can vote!</p>
+{% endif %}
+{% if perms.foo.add_driving %}
+<p>You can drive!</p>
+{% endif %}
+{% else %}
+<p>You don't have permission to do anything in the foo app.</p>
+{% endif %}
+```
+
+```HTML
+{% if 'foo' in perms %}
+{% if 'foo.add_vote' in perms %}
+<p>In lookup works, too.</p>
+{% endif %}
+{% endif %}
+```
+
