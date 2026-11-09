@@ -85,6 +85,7 @@ def confirm_add(request):
         # avec le message d'erreur
         return render(request, 'polls/add.html', {
             'error_message': "You didn't enter a question text",
+            'liste_no_choix': range(NB_MAX_CHOICES)
         })
 
 
