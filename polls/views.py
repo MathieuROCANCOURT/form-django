@@ -8,9 +8,9 @@ from django.views import generic
 
 from .utils import minimax
 from .models import Question, Choice
-from .forms import NameForm
+from .forms import Form
 
-NB_MAX_CHOIX = 5
+NB_MAX_CHOICES = 5
 
 
 class IndexView(generic.ListView):
@@ -53,7 +53,7 @@ def statistics(request):
 @require_http_methods(["GET"])
 def add(request):
     return render(request, 'polls/add.html', {
-        'liste_no_choix': range(NB_MAX_CHOIX)
+        'liste_no_choix': range(NB_MAX_CHOICES)
     })
 
 
@@ -70,7 +70,7 @@ def confirm_add(request):
 
         # on traite à présent les champs de choix remplis
         # (on s'arrête au premier vide)
-        for no_choix in range(NB_MAX_CHOIX):
+        for no_choix in range(NB_MAX_CHOICES):
             nom_champ = 'choix_{}'.format(no_choix)
             choice_text = request.POST[nom_champ].strip()
             if choice_text:
@@ -107,7 +107,7 @@ def get_name(request):
     # if this is a POST request we need to process the form data
     if request.method == "POST":
         # create a form instance and populate it with data from the request:
-        form = NameForm(request.POST)
+        form = Form(request.POST)
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
@@ -117,7 +117,7 @@ def get_name(request):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = NameForm()
+        form = Form()
 
     return render(request, "name.html", {"form": form})
 
