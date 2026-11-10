@@ -1,6 +1,6 @@
 from django.db.models import F, Sum, Max
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
@@ -8,8 +8,9 @@ from django.views import generic
 
 from .utils import minimax
 from .models import Question, Choice
-from .forms import Form
+from .forms import QuestionAddForm
 
+PATH_DETAIL_HTML = "polls/detail.html"
 NB_MAX_CHOICES = 5
 
 
@@ -49,47 +50,39 @@ def statistics(request):
 
 
 @require_http_methods(["GET"])
-def add(request):
-    return render(request, 'polls/add.html', {
+def confirm_add(request):
+    return render(request, 'polls/confirm_add.html', {
         'liste_no_choix': range(NB_MAX_CHOICES)
     })
 
 
-@require_http_methods(["POST"])
-def confirm_add(request):
-    # récupération du libellé de la question,
-    # sans les éventuels espaces avant et après
-    question_text = request.POST['question_text'].strip()
-    if question_text:
-        # ajout de la question si elle n'est pas vide
-        question = Question(question_text=question_text,
-                            pub_date=timezone.now())
-        question.save()
-
-        # on traite à présent les champs de choix remplis
-        # (on s'arrête au premier vide)
-        for no_choix in range(NB_MAX_CHOICES):
-            nom_champ = 'choix_{}'.format(no_choix)
-            choice_text = request.POST[nom_champ].strip()
-            if choice_text:
-                choice = Choice(question=question,
-                                choice_text=choice_text)
-                choice.save()
-            else:
-                break
-        return render(request, 'polls/confirm_add.html')
+def add(request):
+    if request.method == 'POST':
+        form = QuestionAddForm(request.POST)
+        if form.is_valid():
+            question = Question(question_text=form.cleaned_data['question_text'],
+                                pub_date=timezone.now())
+            question.save()
+            # on traite à présent les champs de choix remplis
+            # (on s'arrête au premier vide)
+            for no_choix in range(NB_MAX_CHOICES):
+                nom_champ = 'choice_{}'.format(no_choix)
+                choice_text = form.cleaned_data[nom_champ].strip()
+                if choice_text:
+                    choice = Choice(question=question,
+                                    choice_text=choice_text)
+                    choice.save()
+                else:
+                    break
+            return redirect('polls:confirm_add')
     else:
-        # réaffichage du formulaire de saisie de la question
-        # avec le message d'erreur
-        return render(request, 'polls/add.html', {
-            'error_message': "You didn't enter a question text",
-            'liste_no_choix': range(NB_MAX_CHOICES)
-        })
+        form = QuestionAddForm()
+    return render(request, 'polls/add.html', {'form': form})
 
 
 class DetailView(generic.DetailView):
     model = Question
-    template_name = "polls/detail.html"
+    template_name = PATH_DETAIL_HTML
 
 
 class ResultsView(generic.DetailView):
@@ -105,26 +98,7 @@ class FrequencyView(generic.DetailView):
 @require_http_methods(["GET"])
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    return render(request, "polls/detail.html", {"question": question})
-
-
-def get_name(request):
-    # if this is a POST request we need to process the form data
-    if request.method == "POST":
-        # create a form instance and populate it with data from the request:
-        form = Form(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return HttpResponseRedirect("/thanks/")
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = Form()
-
-    return render(request, "name.html", {"form": form})
+    return render(request, PATH_DETAIL_HTML, {"question": question})
 
 
 @require_http_methods(["POST"])
@@ -136,7 +110,7 @@ def vote(request, question_id):
         # Redisplay the question voting form.
         return render(
             request,
-            "polls/detail.html",
+            PATH_DETAIL_HTML,
             {
                 "question": question,
                 "error_message": "You didn't select a choice.",
