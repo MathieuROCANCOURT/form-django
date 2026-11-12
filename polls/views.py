@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from django.views import generic
+from django.contrib.auth.decorators import login_required
 
 from .utils import minimax
 from .models import Question, Choice
@@ -49,6 +50,7 @@ def statistics(request):
     })
 
 
+@login_required(login_url="polls:login")
 @require_http_methods(["GET"])
 def confirm_add(request):
     return render(request, 'polls/confirm_add.html', {
@@ -56,6 +58,7 @@ def confirm_add(request):
     })
 
 
+@login_required(login_url="polls:login")
 def add(request):
     if request.method == 'POST':
         form = QuestionAddForm(request.POST)
