@@ -1,8 +1,19 @@
-body {
-    background: white url("images/background.png") no-repeat;
+html {
+    background-image: url("images/background.png");
     background-size: cover;
+    background-blend-mode: multiply;
 }
 
-html, a {
-    color: limegreen;
+html:before {
+    content: "";
+    position: absolute;
+    width : 100%;
+    height: 100%;
+    background: inherit;
+    z-index: -1;
+    filter: blur(3px);
+}
+
+html, a, ul, li {
+    color: #f80a0a;
 }
