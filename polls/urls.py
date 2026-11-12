@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.auth import views as auth_views
 
 from . import views
 
@@ -6,6 +7,8 @@ app_name = "polls"
 urlpatterns = [
     # ex: /polls/
     path("", views.index, name="index"),
+    # ex: /polls/login
+    path("login", auth_views.LoginView.as_view(template_name="polls/login.html", next_page="all/"), name="login"),
     # /polls/all
     path("all/", views.AllPollsView.as_view(), name="all"),
     # /polls/statistics
