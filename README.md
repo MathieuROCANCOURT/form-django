@@ -1,5 +1,11 @@
 # form-django
 
+## Install the packages requirements
+```bash
+pip install -r requirements.txt
+```
+
+
 ## Launch Django development server
 ```bash
 python manage.py runserver
