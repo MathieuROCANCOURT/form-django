@@ -3,15 +3,20 @@
 <html lang="fr">
 <head>
     <link rel="stylesheet" href="{% static 'polls/style.css' %}">
-    <title>{% block title %}My amazing site{% endblock %}</title>
+    <title>{% block title %}Mon super site de sondage{% endblock %}</title>
 </head>
 
 <body>
 <div id="sidebar">
     {% block sidebar %}
     <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/polls/">Accueil</a></li>
+        {% if user.is_authenticated %}
+        <li>Profil: {{ user.username }}</li> <a href="/polls/logout"><button>Déconnexion</button></a>
+        {% else %}
+        <li><a href="/polls/login">Connexion</a></li>
+        {% endif %}
+        <li><a href="/polls/all">Tous les sondages</a></li>
     </ul>
     {% endblock %}
 </div>
