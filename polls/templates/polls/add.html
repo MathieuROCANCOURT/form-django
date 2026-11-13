@@ -5,7 +5,7 @@
 {% block content %}
 <h1>Add a question</h1>
 {% if error_message %}
-<p><strong style="color: red">{{ error_message }}</strong></p>
+<p class="error_message">{{ error_message }</p>
 {% endif %}
 <form action="{% url 'polls:add' %}" method="post">
     {% csrf_token %}
