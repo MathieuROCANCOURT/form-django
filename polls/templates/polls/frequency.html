@@ -7,9 +7,11 @@
 
 <ul>
     {% for choice in question.get_choices %}
-    <li>{{ choice.0 }}: {{ choice.1 }} vote{{ choice.1|pluralize }}, fréquence: {{ choice.2|floatformat:"2" }} %</li>
+    <li>{{ choice.0 }}: {{ choice.1 }} vote{{ choice.1|pluralize }}, fréquence:
+        {{ choice.2|floatformat:"2"|default:"Non"}} %
+    </li>
     {% endfor %}
 </ul>
 
-<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+<a href="{% url 'polls:detail' question.id %}"><button>Voter à cette question</button></a>
 {% endblock %}

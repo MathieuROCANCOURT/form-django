@@ -8,7 +8,8 @@ urlpatterns = [
     # ex: /polls/
     path("", views.index, name="index"),
     # ex: /polls/login
-    path("login/", auth_views.LoginView.as_view(template_name="polls/login.html", next_page="/polls/all/"), name="login"),
+    path("login/", auth_views.LoginView.as_view(template_name="polls/login.html", next_page="/polls/all/"),
+         name="login"),
     path("logout/", views.logout_view, name="logout"),
     # /polls/all
     path("all/", views.AllPollsView.as_view(), name="all"),
