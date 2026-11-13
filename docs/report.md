@@ -1,3 +1,14 @@
+## Initialiser un projet django
+
+### Création d'un projet Django
+
+```bash
+django-admin startproject mysite djangotutorial
+```
+"djangotutotial" est un nom de dossier qui faut créer pour avoir le projet Django à l'intérieur.
+
+---
+
 Lors des créations des nouvelles interfaces et en ajoutant les 5 questions où chaque question a 3 choix, on peut voir
 tous les attributs de mes classes "Questions" et "Choices" en voyant les attributs sans les identifiants.
 Aucune filtration, triage ou de recherche d'un contenu ne peut être fait.
