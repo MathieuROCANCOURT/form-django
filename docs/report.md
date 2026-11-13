@@ -7,6 +7,12 @@ django-admin startproject mysite djangotutorial
 ```
 "djangotutotial" est un nom de dossier qui faut créer pour avoir le projet Django à l'intérieur.
 
+### Création du dossier polls
+
+```bash
+python manage.py startapp polls
+```
+
 ---
 
 Lors des créations des nouvelles interfaces et en ajoutant les 5 questions où chaque question a 3 choix, on peut voir
