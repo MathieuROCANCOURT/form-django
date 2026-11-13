@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from django.db.models import F, Sum, Max
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -126,3 +127,9 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+
+
+@require_http_methods(["GET"])
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("polls:login"))
