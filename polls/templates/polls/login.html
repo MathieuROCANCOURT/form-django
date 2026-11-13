@@ -18,7 +18,9 @@
 <form method="post" action="{% url 'polls:login' %}">
     {% csrf_token %}
     <table>
-        <th>CONNEXION</th>
+        <thead>
+            <th colspan="2">CONNEXION</th>
+        </thead>
         <tr>
             <td>{{ form.username.label_tag }}</td>
             <td>{{ form.username }}</td>
@@ -32,6 +34,7 @@
     <input type="submit" value="Login">
     <input type="hidden" name="next">
 </form>
+<br>
 <a href="{% url 'polls:index' %}"><input type="button" value="Guest Access"></a>
 
 {% endblock %}
