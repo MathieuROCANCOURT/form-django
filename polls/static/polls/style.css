@@ -16,4 +16,16 @@ html:before {
 
 html, a, ul, li {
     color: #d8a706;
+    list-style-type: none;
+}
+
+ul {
+    padding: 0%;
+}
+
+#content {
+    text-align:center;
+    margin-top: 2em;
+    padding: 1.3%;
+    background-color: rgba(0, 200, 255, 0.4);
 }
